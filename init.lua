@@ -171,6 +171,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -522,6 +525,8 @@ require('lazy').setup({
           --  To jump back, press <C-t>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+
           -- Find references for the word under your cursor.
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
@@ -548,7 +553,8 @@ require('lazy').setup({
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          --map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          map('<A-Enter>', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -685,48 +691,48 @@ require('lazy').setup({
     end,
   },
 
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
-        else
-          lsp_format_opt = 'fallback'
-        end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
-  },
+  --{ -- Autoformat
+  --  'stevearc/conform.nvim',
+  --  event = { 'BufWritePre' },
+  --  cmd = { 'ConformInfo' },
+  --  keys = {
+  --    {
+  --      '<leader>f',
+  --      function()
+  --        require('conform').format { async = true, lsp_format = 'fallback' }
+  --      end,
+  --      mode = '',
+  --      desc = '[F]ormat buffer',
+  --    },
+  --  },
+  --  opts = {
+  --    notify_on_error = false,
+  --    format_on_save = function(bufnr)
+  --      -- Disable "format_on_save lsp_fallback" for languages that don't
+  --      -- have a well standardized coding style. You can add additional
+  --      -- languages here or re-enable it for the disabled ones.
+  --      local disable_filetypes = { c = true, cpp = true, go = true }
+  --      local lsp_format_opt
+  --      if disable_filetypes[vim.bo[bufnr].filetype] then
+  --        lsp_format_opt = 'never'
+  --      else
+  --        lsp_format_opt = 'fallback'
+  --      end
+  --      return {
+  --        timeout_ms = 500,
+  --        lsp_format = lsp_format_opt,
+  --      }
+  --    end,
+  --    formatters_by_ft = {
+  --      lua = { 'stylua' },
+  --      -- Conform can also run multiple formatters sequentially
+  --      -- python = { "isort", "black" },
+  --      --
+  --      -- You can use 'stop_after_first' to run the first available formatter from the list
+  --      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+  --    },
+  --  },
+  --},
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -796,6 +802,10 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
