@@ -1,0 +1,11 @@
+return {
+    "user/plugin.nvim",
+    --dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+	require("plugin").setup({
+	    -- src = {
+	    --     cmp = { enabled = true, },
+	    -- },
+	})
+    end,
+}
