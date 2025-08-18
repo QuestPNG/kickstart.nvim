@@ -198,6 +198,10 @@ vim.keymap.set('n', '<leader>wl', '<C-w><C-l>', { desc = 'Move focus to the righ
 vim.keymap.set('n', '<leader>wj', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<leader>wk', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Creating splits
+vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Create horizontal split' })
+vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Create vertical split' })
+
 
 -- vim.keymap.set('n', '<leader>wh', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 -- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
