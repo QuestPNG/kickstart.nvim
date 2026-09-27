@@ -240,7 +240,7 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.lsp.config('godot', {
   cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
-  filetypes = { 'gdscript', 'gd'},
+  filetypes = {'gdscript'},
   root_dir = function(bufnr, on_dir)
     local root = vim.fs.root(bufnr, { 'project.godot' })
     if root then
@@ -248,6 +248,8 @@ vim.lsp.config('godot', {
     end
   end,
 })
+
+vim.lsp.enable('godot')
 
 
 -- [[ Configure and install plugins ]]
