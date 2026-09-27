@@ -234,6 +234,22 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+
+--- GODOT
+--- gdscript LSP support
+
+vim.lsp.config('godot', {
+  cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+  filetypes = { 'gdscript', 'gd'},
+  root_dir = function(bufnr, on_dir)
+    local root = vim.fs.root(bufnr, { 'project.godot' })
+    if root then
+      on_dir(root)
+    end
+  end,
+})
+
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -665,6 +681,7 @@ require('lazy').setup({
             },
           },
         },
+
       }
 
       -- Ensure the servers and tools above are installed
